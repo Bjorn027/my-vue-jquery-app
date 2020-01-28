@@ -11,14 +11,18 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field label="username" name="username" type="text" />
+                  <v-text-field id="username" label="username" name="username" type="text" />
 
                   <v-text-field id="password" label="password" name="password" type="password" />
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="#800000">Login</v-btn>
+                <v-btn color="#800000" @click="register()">Register</v-btn>
+              </v-card-actions>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn color="#800000" @click="login()">Login</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -29,9 +33,74 @@
 </template>
 
 <script>
+import Jquery from "jquery";
+import "../jquery-remote.js";
+
+const $ = Jquery;
+const server = "https://supernotes.duckdns.org";
+
 export default {
-  props: {
-    source: String
+  data: () => ({
+    loggedIn: false,
+    username: "Shawn",
+    password: "something",
+    res: "",
+    createGroupText: "",
+    createNoteText: "",
+    notes: [],
+    groupId: "",
+    groups: []
+  }),
+  methods: {
+    login() {
+      var data = {
+        username: this.username,
+        password: this.password
+      };
+      $.post(server + "/login", data, res => {
+        if (res.success) {
+          this.loginSuccessful(res.username);
+        } else {
+          this.res = JSON.stringify(res);
+        }
+      });
+    },
+    register() {
+      var data = {
+        username: this.username,
+        password: this.password
+      };
+      $.post(server + "/register", data, res => {
+        if (res.success) {
+          this.loginSuccessful(res.username);
+        } else {
+          this.res = JSON.stringify(res);
+        }
+      });
+    },
+    loginSuccessful(username) {
+      this.loggedIn = true;
+      this.username = username;
+      this.getGroups();
+      this.getNotes();
+    },
+    logout() {
+      $.post("/logout", res => {
+        if (res.success) {
+          this.loggedIn = false;
+          this.username = "";
+          this.createGroupText = "";
+          this.createNoteText = "";
+          this.notes = [];
+          this.groups = [];
+          this.groupId = "";
+        }
+      });
+    },
+
+    props: {
+      source: String
+    }
   }
 };
 </script>

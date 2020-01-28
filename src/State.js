@@ -1,3 +1,5 @@
 export default {
-    showLogin: false
+    showLogin: false,
+    showNotes: false,
+    showGroups: false
 }
