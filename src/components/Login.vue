@@ -24,6 +24,9 @@
                 <v-spacer />
                 <v-btn color="#800000" @click="login()">Login</v-btn>
               </v-card-actions>
+              <v-card-actions>
+                <v-btn @click="getGroups" color="success">Groups</v-btn>
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -34,7 +37,6 @@
 
 <script>
 import Jquery from "jquery";
-import "../jquery-remote.js";
 
 const $ = Jquery;
 const server = "https://supernotes.duckdns.org";
@@ -60,10 +62,17 @@ export default {
       $.post(server + "/login", data, res => {
         if (res.success) {
           this.loginSuccessful(res.username);
+          alert("You are logged in");
         } else {
           this.res = JSON.stringify(res);
+          alert("Login failed");
         }
       });
+    },
+    loginSuccessful(username) {
+      this.loggedIn = true;
+      this.username = username;
+      this.$root.page = "Groups";
     },
     register() {
       var data = {
@@ -78,14 +87,17 @@ export default {
         }
       });
     },
-    loginSuccessful(username) {
-      this.loggedIn = true;
-      this.username = username;
-      this.getGroups();
-      this.getNotes();
+    getGroups() {
+      $.get(server + "/groups", res => {
+        if (res.success) {
+          this.groups = res.groups;
+        } else {
+          this.res = res;
+        }
+      });
     },
     logout() {
-      $.post("/logout", res => {
+      $.post(server + "/logout", res => {
         if (res.success) {
           this.loggedIn = false;
           this.username = "";
@@ -96,11 +108,11 @@ export default {
           this.groupId = "";
         }
       });
-    },
-
-    props: {
-      source: String
     }
+  },
+
+  props: {
+    source: String
   }
 };
 </script>
