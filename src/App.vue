@@ -31,6 +31,18 @@
 
     <v-app-bar app clipped-left color="#800000">
       <v-toolbar-title>Super Duper Notes</v-toolbar-title>
+   
+      <v-flex xs3 offset-xs9 align-end>
+      <v-list-item class="float-right" link @click="logout(); $root.page='Login'">
+        <v-icon>mdi-logout</v-icon>
+          <v-list-item-action>
+            
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-flex>
     </v-app-bar>
 
     <v-content>
@@ -64,7 +76,22 @@ export default {
   data: () => ({
     drawer: null
   }),
-  methods: {},
+  methods: {
+    logout() {
+      $.post(server + "/logout", res => {
+        if (res.success) {
+          this.loggedIn = false;
+          this.username = "";
+          this.createGroupText = "";
+          this.createNoteText = "";
+          this.notes = [];
+          this.groups = [];
+          this.groupId = "";
+        }
+      });
+    }
+  
+  },
   mounted() {
     $.post(server + "/checkLogin", res => {
       if (res.success) {
@@ -77,3 +104,8 @@ export default {
   }
 };
 </script>
+<style>
+.v-toolbar__title{
+  overflow: inherit
+}
+</style>

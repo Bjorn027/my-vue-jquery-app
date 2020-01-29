@@ -11,9 +11,9 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field id="username" label="username" name="username" type="text" />
+                  <v-text-field @keyup.enter="login" id="username" label="username" name="username" type="text" />
 
-                  <v-text-field id="password" label="password" name="password" type="password" />
+                  <v-text-field @keyup.enter="login" id="password" label="password" name="password" type="password" />
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -24,9 +24,7 @@
                 <v-spacer />
                 <v-btn color="#800000" @click="login()">Login</v-btn>
               </v-card-actions>
-              <v-card-actions>
-                <v-btn @click="getGroups" color="success">Groups</v-btn>
-              </v-card-actions>
+              
             </v-card>
           </v-col>
         </v-row>
@@ -94,22 +92,9 @@ export default {
         } else {
           this.res = res;
         }
-      });
+      });}
     },
-    logout() {
-      $.post(server + "/logout", res => {
-        if (res.success) {
-          this.loggedIn = false;
-          this.username = "";
-          this.createGroupText = "";
-          this.createNoteText = "";
-          this.notes = [];
-          this.groups = [];
-          this.groupId = "";
-        }
-      });
-    }
-  },
+    
 
   props: {
     source: String
