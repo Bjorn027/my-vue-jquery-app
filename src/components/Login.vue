@@ -11,9 +11,21 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field @keyup.enter="login" id="username" label="username" name="username" type="text" />
+                  <v-text-field
+                    v-model="username"
+                    @keyup.enter="login"
+                    id="username"
+                    label="username"
+                    type="text"
+                  />
 
-                  <v-text-field @keyup.enter="login" id="password" label="password" name="password" type="password" />
+                  <v-text-field
+                    v-model="password"
+                    @keyup.enter="login"
+                    id="password"
+                    label="password"
+                    type="password"
+                  />
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -24,7 +36,6 @@
                 <v-spacer />
                 <v-btn color="#800000" @click="login()">Login</v-btn>
               </v-card-actions>
-              
             </v-card>
           </v-col>
         </v-row>
@@ -42,8 +53,8 @@ const server = "https://supernotes.duckdns.org";
 export default {
   data: () => ({
     loggedIn: false,
-    username: "Shawn",
-    password: "something",
+    username: "",
+    password: "",
     res: "",
     createGroupText: "",
     createNoteText: "",
@@ -60,7 +71,6 @@ export default {
       $.post(server + "/login", data, res => {
         if (res.success) {
           this.loginSuccessful(res.username);
-          alert("You are logged in");
         } else {
           this.res = JSON.stringify(res);
           alert("Login failed");
@@ -92,9 +102,16 @@ export default {
         } else {
           this.res = res;
         }
-      });}
-    },
-    
+      });
+    }
+  },
+  mounted() {
+    $.post(server + "/checkLogin", res => {
+      if (res.success) {
+        this.loginSuccessful(res.username);
+      }
+    });
+  },
 
   props: {
     source: String

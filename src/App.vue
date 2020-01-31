@@ -10,14 +10,7 @@
             <v-list-item-title>Login</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link @click="$root.page='Notes'">
-          <v-list-item-action>
-            <v-icon>mdi-content-paste</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Notes</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+
         <v-list-item link @click="$root.page='Groups'">
           <v-list-item-action>
             <v-icon>mdi-view-dashboard</v-icon>
@@ -31,13 +24,11 @@
 
     <v-app-bar app clipped-left color="#800000">
       <v-toolbar-title>Super Duper Notes</v-toolbar-title>
-   
+
       <v-flex xs3 offset-xs9 align-end>
-      <v-list-item class="float-right" link @click="logout(); $root.page='Login'">
-        <v-icon>mdi-logout</v-icon>
-          <v-list-item-action>
-            
-          </v-list-item-action>
+        <v-list-item class="float-right" link @click="logout(); $root.page='Login'">
+          <v-icon>mdi-logout</v-icon>
+          <v-list-item-action></v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item-content>
@@ -74,6 +65,15 @@ export default {
     source: String
   },
   data: () => ({
+    loggedIn: false,
+    username: "",
+    password: "",
+    res: "",
+    createGroupText: "",
+    createNoteText: "",
+    notes: [],
+    groupId: "",
+    groups: [],
     drawer: null
   }),
   methods: {
@@ -90,22 +90,11 @@ export default {
         }
       });
     }
-  
-  },
-  mounted() {
-    $.post(server + "/checkLogin", res => {
-      if (res.success) {
-        this.loginSuccessful(res.username);
-      }
-    });
-  },
-  created() {
-    this.$vuetify.theme.dark = true;
   }
 };
 </script>
 <style>
-.v-toolbar__title{
-  overflow: inherit
+.v-toolbar__title {
+  overflow: inherit;
 }
 </style>
