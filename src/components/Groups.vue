@@ -2,7 +2,7 @@
   <div>
     <section>
       <h4>Groups</h4>
-      <input v-model="createGroupText" placeholder="name" />
+      <input @keyup.enter="createGroup" v-model="createGroupText" placeholder="name" />
       <button @click="createGroup">Create Group</button>
       <br />
       <input type="radio" name="group" v-model="groupId" value @click="getNotes()" /> All

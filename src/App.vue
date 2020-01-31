@@ -25,7 +25,7 @@
     <v-app-bar app clipped-left color="#800000">
       <v-toolbar-title>Super Duper Notes</v-toolbar-title>
 
-      <v-flex xs3 offset-xs9 align-end>
+      <v-flex align-end>
         <v-list-item class="float-right" link @click="logout(); $root.page='Login'">
           <v-icon>mdi-logout</v-icon>
           <v-list-item-action></v-list-item-action>
