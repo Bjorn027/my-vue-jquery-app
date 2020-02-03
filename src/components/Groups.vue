@@ -2,7 +2,9 @@
   <div class="mainbody">
     <v-card color="#333333">
       <section>
+        <v-banner>
         <div class="centered display-1">Group Creation</div>
+        </v-banner>
         <v-divider />
         <v-text-field
           color="success"
@@ -25,7 +27,9 @@
         </v-snackbar>
         <br />
         <br />
+        <v-banner>
         <div class="display-1">Groups List</div>
+        </v-banner>
         <v-divider />
         <br />
 
@@ -39,6 +43,7 @@
             @click="getNotes(group._id)"
           />
           {{group.text}}
+          
           <v-btn small color="error" text class="delete" @click="removeGroup(group._id)">
             <v-icon small>mdi-cancel</v-icon>
           </v-btn>
@@ -47,7 +52,9 @@
       <br />
 
       <section>
+        <v-banner>
         <h1 class="centered display-1">Note Creation</h1>
+        </v-banner>
         <v-divider />
         <br />
         <v-text-field
@@ -69,8 +76,9 @@
         </v-snackbar>
         <br />
         <br />
-
+        <v-banner>
         <div class="display-1">Notes</div>
+        </v-banner>
         <v-divider />
         <br />
         <div v-for="note in notes" :key="note._id" class="note">

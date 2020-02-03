@@ -12,43 +12,7 @@ import Jquery from "jquery";
 const $ = Jquery;
 const server = "https://supernotes.duckdns.org";
 export default {
-  getNotes(groupId) {
-    $.get(server + "/notes", { groupId }, res => {
-      if (res.success) {
-        this.notes = res.notes;
-      } else {
-        this.res = res;
-      }
-    });
-  },
-  createNote() {
-    $.post(
-      server + "/notes/create",
-      {
-        text: this.createNoteText,
-        groupId: this.groupId
-      },
-      res => {
-        if (res.success) {
-          this.notes = res.notes;
-          this.createNoteText = "";
-        } else {
-          this.res = res;
-        }
-      }
-    );
-  },
-  removeNote(noteId) {
-    console.log({ noteId });
-    $.post(server + "/notes/remove", { noteId }, res => {
-      if (res.success) {
-        this.getNotes();
-      } else {
-        this.res = res;
-      }
-    });
-  }
-};
+}
 </script>
 
 <style>
