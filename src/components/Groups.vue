@@ -1,34 +1,86 @@
 <template>
-  <div>
-    <section>
-      <h4>Groups</h4>
-      <input @keyup.enter="createGroup" v-model="createGroupText" placeholder="name" />
-      <button @click="createGroup">Create Group</button>
-      <br />
-      <input type="radio" name="group" v-model="groupId" value @click="getNotes()" /> All
-      <div v-for="group in groups" :key="group._id">
-        <input
-          type="radio"
-          name="group"
-          v-model="groupId"
-          :value="group._id"
-          @click="getNotes(group._id)"
+  <div class="mainbody">
+    <v-card color="#333333">
+      <section>
+        <div class="centered display-1">Group Creation</div>
+        <v-divider />
+        <v-text-field
+          color="success"
+          label="Enter Group Name"
+          @keyup.enter="createGroup(); snackbar = true"
+          v-model="createGroupText"
         />
-        {{group.text}}
-        <button class="delete" @click="removeGroup(group._id)">Delete Group</button>
-      </div>
-    </section>
 
-    <section>
-      <h4>Notes</h4>
-      <textarea v-model="createNoteText" placeholder="note" cols="100" rows="5"></textarea>
+        <v-btn
+          rounded
+          class="float-right black--text"
+          aria-hidden="true"
+          color="success"
+          @click="createGroup(); snackbar = true"
+        >Create Group</v-btn>
+
+        <v-snackbar v-model="snackbar" :timeout="timeout">
+          {{ text }}
+          <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
+        <br />
+        <br />
+        <div class="display-1">Groups List</div>
+        <v-divider />
+        <br />
+
+        <input type="radio" name="group" v-model="groupId" value @click="getNotes()" /> All
+        <div v-for="group in groups" :key="group._id">
+          <input
+            type="radio"
+            name="group"
+            v-model="groupId"
+            :value="group._id"
+            @click="getNotes(group._id)"
+          />
+          {{group.text}}
+          <v-btn small color="error" text class="delete" @click="removeGroup(group._id)">
+            <v-icon small>mdi-cancel</v-icon>
+          </v-btn>
+        </div>
+      </section>
       <br />
-      <button @click="createNote">Create Note</button>
-      <div v-for="note in notes" :key="note._id" class="note">
-        {{note.text}}
-        <button class="delete" @click="removeNote(note._id)">Delete Note</button>
-      </div>
-    </section>
+
+      <section>
+        <h1 class="centered display-1">Note Creation</h1>
+        <v-divider />
+        <br />
+        <v-text-field
+          v-model="createNoteText"
+          @keyup.enter="createNote(); snackbar2 = true"
+          color="success"
+          label="Note Text"
+        ></v-text-field>
+        <br />
+        <v-btn
+          class="float-right black--text"
+          color="success"
+          rounded
+          @click="createNote(); snackbar2 = true"
+        >Create Note</v-btn>
+        <v-snackbar v-model="snackbar2" :timeout="timeout">
+          {{ text2 }}
+          <v-btn color="blue" text @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
+        <br />
+        <br />
+
+        <div class="display-1">Notes</div>
+        <v-divider />
+        <br />
+        <div v-for="note in notes" :key="note._id" class="note">
+          {{note.text}}
+          <v-btn small color="error" text class="delete" @click="removeNote(note._id)">
+            <v-icon small>mdi-cancel</v-icon>
+          </v-btn>
+        </div>
+      </section>
+    </v-card>
   </div>
 </template>
 
@@ -43,7 +95,13 @@ export default {
     createNoteText: "",
     notes: [],
     groupId: "",
-    groups: []
+    groups: [],
+    snackbar: false,
+    snackbar2: false,
+    text: "Group Created",
+    text2: "Note Saved",
+    timeout: 2000,
+    name: $.get("#username")
   }),
   methods: {
     removeGroup(groupId) {
@@ -137,4 +195,10 @@ export default {
 </script>
 
 <style>
+.mainbody {
+  padding: 40px;
+}
+.centered {
+  text-align: center;
+}
 </style>
