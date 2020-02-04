@@ -50,7 +50,7 @@
 
 <script>
 import Login from "./components/Login.vue";
-import Notes from "./components/Notes.vue";
+
 import Groups from "./components/Groups.vue";
 
 import Jquery from "jquery";
@@ -60,7 +60,7 @@ const server = "https://supernotes.duckdns.org";
 const $ = Jquery;
 
 export default {
-  components: { Login, Notes, Groups },
+  components: { Login, Groups },
   props: {
     source: String
   },

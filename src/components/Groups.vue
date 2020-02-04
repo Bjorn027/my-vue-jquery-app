@@ -3,7 +3,7 @@
     <v-card color="#333333">
       <section>
         <v-banner>
-        <div class="centered display-1">Group Creation</div>
+          <div class="centered display-1">Group Creation</div>
         </v-banner>
         <v-divider />
         <v-text-field
@@ -28,32 +28,45 @@
         <br />
         <br />
         <v-banner>
-        <div class="display-1">Groups List</div>
+          <div class="display-1">Groups List</div>
         </v-banner>
         <v-divider />
-        <br />
-
-        <input type="radio" name="group" v-model="groupId" value @click="getNotes()" /> All
-        <div v-for="group in groups" :key="group._id">
-          <input
-            type="radio"
-            name="group"
-            v-model="groupId"
-            :value="group._id"
-            @click="getNotes(group._id)"
-          />
-          {{group.text}}
-          
-          <v-btn small color="error" text class="delete" @click="removeGroup(group._id)">
-            <v-icon small>mdi-cancel</v-icon>
-          </v-btn>
-        </div>
+        <br />Select a group
+        <v-container>
+          <v-radio-group class="d-inline-flex" v-model="groupId" @change="getNotes(groupId)">
+            <v-list>
+              <v-list-item>
+                <v-radio label="All" :value="''" />
+                <v-spacer></v-spacer>
+              </v-list-item>
+              <v-list-item v-for="group in groups" :key="group._id">
+                <v-radio :label="group.text" :value="group._id" />
+                <v-spacer></v-spacer>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      small
+                      color="error"
+                      v-on="on"
+                      text
+                      class="delete"
+                      @click="removeGroup(group._id)"
+                    >
+                      <v-icon small>mdi-cancel</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Delete</span>
+                </v-tooltip>
+              </v-list-item>
+            </v-list>
+          </v-radio-group>
+        </v-container>
       </section>
       <br />
 
       <section>
         <v-banner>
-        <h1 class="centered display-1">Note Creation</h1>
+          <h1 class="centered display-1">Note Creation</h1>
         </v-banner>
         <v-divider />
         <br />
@@ -77,15 +90,57 @@
         <br />
         <br />
         <v-banner>
-        <div class="display-1">Notes</div>
+          <div class="display-1">Notes</div>
         </v-banner>
         <v-divider />
         <br />
-        <div v-for="note in notes" :key="note._id" class="note">
-          {{note.text}}
-          <v-btn small color="error" text class="delete" @click="removeNote(note._id)">
-            <v-icon small>mdi-cancel</v-icon>
-          </v-btn>
+        <v-container class="d-inline-flex">
+          <v-list>
+            <v-spacer></v-spacer>
+            <v-list-item v-for="note in notes" :key="note._id" class="note">
+              {{note.text}}
+              <v-spacer></v-spacer>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    small
+                    color="success"
+                    text
+                    class="delete"
+                    v-on="on"
+                    @click="showUpdateNote(note._id)"
+                  >
+                    <v-icon small>mdi-update</v-icon>
+                  </v-btn>
+                </template>
+                <span>Update</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    small
+                    color="error"
+                    text
+                    class="delete"
+                    v-on="on"
+                    @click="removeNote(note._id)"
+                  >
+                    <v-icon small>mdi-cancel</v-icon>
+                  </v-btn>
+                </template>
+                <span>Delete</span>
+              </v-tooltip>
+            </v-list-item>
+          </v-list>
+        </v-container>
+        <div v-if="updateNotePopup" class="popup">
+          <v-banner>
+            <div class="display-1">Edit Note</div>
+          </v-banner>
+          <v-text-field v-model="updateNoteText" placeholder="note"></v-text-field>
+          <br />
+          <v-btn x-small color="success" class="create black--text" @click="updateNote">Update</v-btn>
+          <v-btn x-small color="error" class="black--text" @click="updateNotePopup = false">Cancel</v-btn>
         </div>
       </section>
     </v-card>
@@ -109,9 +164,60 @@ export default {
     text: "Group Created",
     text2: "Note Saved",
     timeout: 2000,
-    name: $.get("#username")
+    name: $.get("#username"),
+    updateGroupPopup: false,
+    updateNotePopup: false,
+    updateGroupText: "",
+    updateNoteText: ""
   }),
   methods: {
+    showUpdateNote(note) {
+      this.noteId = note._id;
+      this.updateNoteText = note.text;
+      this.updateNotePopup = true;
+    },
+    updateNote() {
+      $.post(
+        "/notes/update",
+        {
+          text: this.updateNoteText,
+          noteId: this.noteId,
+          groupId: this.groupId
+        },
+        res => {
+          if (res.success) {
+            this.notes = res.notes;
+            this.updateNoteText = "";
+            this.updateNotePopup = false;
+          } else {
+            this.res = res;
+          }
+        }
+      );
+    },
+    showUpdateGroup(group) {
+      this.groupId = group._id;
+      this.updateGroupText = group.text;
+      this.updateGroupPopup = true;
+    },
+    updateGroup() {
+      $.post(
+        "/groups/update",
+        {
+          text: this.updateGroupText,
+          groupId: this.groupId
+        },
+        res => {
+          if (res.success) {
+            this.groups = res.groups;
+            this.updateGroupText = "";
+            this.updateGroupPopup = false;
+          } else {
+            this.res = res;
+          }
+        }
+      );
+    },
     removeGroup(groupId) {
       $.post(server + "/groups/remove", { groupId }, res => {
         if (res.success) {
@@ -130,14 +236,18 @@ export default {
         }
       });
     },
-    getNotes(groupId) {
-      $.get(server + "/notes", { groupId }, res => {
-        if (res.success) {
-          this.notes = res.notes;
-        } else {
-          this.res = res;
+    getNotes() {
+      $.get(
+        server + "/notes",
+        { groupId: this.groupId ? this.groupId : null },
+        res => {
+          if (res.success) {
+            this.notes = res.notes;
+          } else {
+            this.res = res;
+          }
         }
-      });
+      );
     },
     createNote() {
       $.post(
