@@ -106,9 +106,9 @@
                     small
                     color="success"
                     text
-                    class="delete"
+                    class="update"
                     v-on="on"
-                    @click="showUpdateNote(note._id)"
+                    @click="showUpdateNote(note)"
                   >
                     <v-icon small>mdi-update</v-icon>
                   </v-btn>
@@ -133,14 +133,14 @@
             </v-list-item>
           </v-list>
         </v-container>
-        <div v-if="updateNotePopup" class="popup">
+        <div v-if="updateNoteFeild" class="field">
           <v-banner>
             <div class="display-1">Edit Note</div>
           </v-banner>
-          <v-text-field v-model="updateNoteText" placeholder="note"></v-text-field>
+          <v-text-field v-model="updateNoteText" placeholder="Note"></v-text-field>
           <br />
           <v-btn x-small color="success" class="create black--text" @click="updateNote">Update</v-btn>
-          <v-btn x-small color="error" class="black--text" @click="updateNotePopup = false">Cancel</v-btn>
+          <v-btn x-small color="error" class="black--text" @click="updateNoteFeild = false">Cancel</v-btn>
         </div>
       </section>
     </v-card>
@@ -158,6 +158,8 @@ export default {
     createNoteText: "",
     notes: [],
     groupId: "",
+    res: "",
+    noteId: "",
     groups: [],
     snackbar: false,
     snackbar2: false,
@@ -166,7 +168,7 @@ export default {
     timeout: 2000,
     name: $.get("#username"),
     updateGroupPopup: false,
-    updateNotePopup: false,
+    updateNoteFeild: false,
     updateGroupText: "",
     updateNoteText: ""
   }),
@@ -174,11 +176,11 @@ export default {
     showUpdateNote(note) {
       this.noteId = note._id;
       this.updateNoteText = note.text;
-      this.updateNotePopup = true;
+      this.updateNoteFeild = true;
     },
     updateNote() {
       $.post(
-        "/notes/update",
+        server + "/notes/update",
         {
           text: this.updateNoteText,
           noteId: this.noteId,
@@ -188,7 +190,7 @@ export default {
           if (res.success) {
             this.notes = res.notes;
             this.updateNoteText = "";
-            this.updateNotePopup = false;
+            this.updateNoteFeild = false;
           } else {
             this.res = res;
           }
@@ -202,7 +204,7 @@ export default {
     },
     updateGroup() {
       $.post(
-        "/groups/update",
+        server + "/groups/update",
         {
           text: this.updateGroupText,
           groupId: this.groupId
