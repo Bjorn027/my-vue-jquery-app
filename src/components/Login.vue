@@ -15,7 +15,7 @@
                     v-model="username"
                     @keyup.enter="login"
                     id="username"
-                    label="username"
+                    label="Username"
                     type="text"
                   />
 
@@ -23,7 +23,7 @@
                     v-model="password"
                     @keyup.enter="login"
                     id="password"
-                    label="password"
+                    label="Password"
                     type="password"
                   />
                 </v-form>

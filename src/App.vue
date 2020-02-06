@@ -1,28 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app clipped color="#800000">
-      <v-list dense>
-        <v-list-item link @click="$root.page='Login'">
-          <v-list-item-action>
-            <v-icon>mdi-login</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Login</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item link @click="$root.page='Groups'">
-          <v-list-item-action>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Groups</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-app-bar app clipped-left color="#800000">
+    <v-app-bar app clipped-left color="#800000" class="trythis">
       <v-toolbar-title>Super Duper Notes</v-toolbar-title>
 
       <v-flex align-end>
@@ -96,5 +74,8 @@ export default {
 <style>
 .v-toolbar__title {
   overflow: inherit;
+}
+.trythis {
+  padding-left: 40px;
 }
 </style>
